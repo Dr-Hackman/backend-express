@@ -42,9 +42,12 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // Serve Swagger UI
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('api/v1/users', userRouter);
-app.use('/auth', authRoutes);
-app.use('/articles',authMiddleware, articleRouter);
+app.use('/api/v1/', userRouter);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/articles',authMiddleware, articleRouter);
+
+// Serve static files from the 'public' directory
+app.use(express.static('assets/public'));
 
 app.listen(appConfig.port, () => {
     console.log(`Server running in ${appConfig.env} mode on port ${appConfig.port}`);

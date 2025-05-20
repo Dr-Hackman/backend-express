@@ -10,6 +10,13 @@ module.exports = {
         return { id: result.insertId };
     },
 
+    find: async () => {
+        const [rows] = await db.query(
+            'SELECT * FROM articles',
+        );
+        return [rows];
+    },
+
     findById: async (id) => {
         const [rows] = await db.query(
             'SELECT * FROM articles WHERE id = ?',
@@ -31,7 +38,7 @@ module.exports = {
             'SELECT * FROM articles WHERE firebase_uid = ?',
             [uid]
         );
-        return rows[0];
+        return [rows];
     },
 
     updateArticle: async (id, newtitle, newdescription, newimage_url) => {

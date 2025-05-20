@@ -3,6 +3,7 @@ const router = express.Router();
 require('dotenv').config();
 ArticleModel = require('../models/article.model');
 const ArticleService = require('../services/article.service');
+const upload = require('../middleware/upload');
 
 /**
  * @swagger
@@ -26,13 +27,23 @@ const ArticleService = require('../services/article.service');
  *               type: string
  *               example: "Articles service is running"
  */
-router.get("/", (req, res) => {
-    res.send("Articles service is running");
+router.get("/", async (req, res) => {
+    try {
+        const [rest] = await ArticleService.find();
+
+        res.status(200).json({
+            status: 'success',
+            data :rest
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 });
 
-router.post('/ajouter', async (req, res) => {
+router.post('/ajouter', upload.single('image'), async (req, res) => {
     try {
-        const { title, description, image_url, author_id, published_at } = req.body;
+        const { title, description, author_id, published_at } = req.body;
+        const image_url = req.file ? `/uploads/${req.file.filename}` : null;
 
         await ArticleService.create({title, description, image_url, author_id, published_at: new Date()  });
 
