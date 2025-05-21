@@ -35,7 +35,7 @@ module.exports = {
 
     findByUserId: async (uid) => {
         const [rows] = await db.query(
-            'SELECT * FROM articles WHERE firebase_uid = ?',
+            'SELECT * FROM articles WHERE author_id = ?',
             [uid]
         );
         return [rows];

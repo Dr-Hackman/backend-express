@@ -29,11 +29,25 @@ const upload = require('../middleware/upload');
  */
 router.get("/", async (req, res) => {
     try {
-        const [rest] = await ArticleService.find();
+        const [result] = await ArticleService.find();
 
         res.status(200).json({
             status: 'success',
-            data :rest
+            data :result
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+router.get("/:author_id", async (req, res) => {
+    try {
+        const author_id = req.params.author_id;
+        const [result] = await ArticleService.findByUserId(author_id);
+
+        res.status(200).json({
+            status: 'success',
+            data :result
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -94,9 +108,13 @@ router.put('/:id', async(req, res) => {
 router.delete('/:id', async(req, res) => {
     try{
         const articleId = req.params.id;
-        const { title, description, image_url } = req.body;
 
-        await ArticleService.updateArticle({id, title, description, image_url, author_id, published_at });
+        await ArticleService.deleteArticle(articleId);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Deleted successfully'
+        });
     }catch(error){
         res.status(400).json({ error: error.message });
     }
