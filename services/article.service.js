@@ -50,6 +50,7 @@ module.exports = {
     },
 
     deleteArticle: async(id) => {
-        await db.query('DELETE FROM users WHERE id = ?', [id]);
+        const result = await db.query('DELETE FROM articles WHERE id = ?', [id]);
+        return result;
     }
 }
